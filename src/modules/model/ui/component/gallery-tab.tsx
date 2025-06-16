@@ -21,6 +21,8 @@ export default function GalleryTab({
   const trpc = useTRPC();
   const router = useRouter();
   const [shouldPoll, setShouldPoll] = useState(true);
+
+ 
   const { data } = useSuspenseQuery(
     trpc.image.getOneWithId.queryOptions(
       { id: genertateImageId! },

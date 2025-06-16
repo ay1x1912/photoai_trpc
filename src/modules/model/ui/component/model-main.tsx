@@ -62,8 +62,8 @@ export default function ModelMain({ models }: ModelMainProps) {
               setActiveTab={setActiveTab}
             />
           </TabsContent>
-          <TabsContent  value="gallery" className="space-y-6">
-            <GalleryTab  activeTab={activeTab} setActiveTab={setActiveTab}  genertateImageId={genertateImageId}/>
+          <TabsContent   value="gallery" className="space-y-6">
+            <GalleryTab   activeTab={activeTab} setActiveTab={setActiveTab}  genertateImageId={genertateImageId}/>
           </TabsContent>
         </Tabs>
       </div>

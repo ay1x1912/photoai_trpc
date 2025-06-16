@@ -19,6 +19,8 @@ export const imageRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const { id } = input;
+
+  
       const [modelId]=await db.select({id:outputImage.modelId}).from(outputImage).where(
         and(eq(outputImage.userId, ctx.user.id), eq(outputImage.id, id))
     )

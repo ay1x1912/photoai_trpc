@@ -63,7 +63,7 @@ function Uploader({setThumbNailUrl}:UploaderProps) {
       formData.append("presignedUrl", presignedUrl);
       await axios.put(presignedUrl, formData);
       const zipUrl = `${R2_URL}/${key}`;
-      toast(`${zipUrl} generated successfully`);
+      toast(`Zip file  generate successfully`);
       setZipUrl(zipUrl);
       return zipUrl;
     } catch {
@@ -155,7 +155,7 @@ function Uploader({setThumbNailUrl}:UploaderProps) {
         )
       );
        setThumbNailUrl(`${R2_URL}/${key}`)
-      toast.success(`${file.name} uploaded successfully!`);
+      toast.success(`ThumbNail  uploaded successfully!`);
     } catch (error) {
       console.error("Upload failed:", error);
       toast.error(`Upload failed for ${file.name}`);
@@ -247,7 +247,7 @@ function Uploader({setThumbNailUrl}:UploaderProps) {
             await uploadZip(files);
           }}
         >
-          Upload Images
+          Upload Zip
         </Button>
       </div>
       <div className="grid grid-col-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 mt-6 ">
