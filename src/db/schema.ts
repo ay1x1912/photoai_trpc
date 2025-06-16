@@ -1,5 +1,5 @@
 import { enumToPgEnum, Status } from "@/modules/image/type";
-import { Ethinicity, EyeColor, Gender} from "@/modules/model/types";
+import { Ethinicity, EyeColor, Gender } from "@/modules/model/types";
 import {
   pgTable,
   text,
@@ -18,6 +18,7 @@ export const user = pgTable("user", {
     .$defaultFn(() => false)
     .notNull(),
   image: text("image"),
+  token: integer("token").notNull().default(0),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
@@ -100,17 +101,15 @@ export const model = pgTable("model", {
     .notNull(),
 });
 
-
-
 export const outputImage = pgTable("outputImage", {
   id: text("id")
-  .primaryKey()
+    .primaryKey()
     .$defaultFn(() => nanoid()),
   imageUrl: text("imageUrl").notNull(),
   prompt: text("prompt").notNull(),
-  styles:text("styles"),
+  styles: text("styles"),
   userId: text("user_id")
-  .notNull()
+    .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   modelId: text("model_id")
     .notNull()
@@ -118,9 +117,30 @@ export const outputImage = pgTable("outputImage", {
   falAiRequest_id: text("falAiRequest_id"),
   status: status("status").notNull().default(Status.Pending),
   createdAt: timestamp("created_at")
-  .$defaultFn(() => /* @__PURE__ */ new Date())
-  .notNull(),
-updatedAt: timestamp("updated_at")
-  .$defaultFn(() => /* @__PURE__ */ new Date())
-  .notNull(),
-})
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+
+export const order = pgTable("order", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  price: integer().default(0),
+  razropayOrderId: text("razropayOrderId").notNull(),
+  razropayPaymentId: text("razropayPaymentId"),
+  ammount: integer(),
+  status: status("status").default(Status.Pending),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});

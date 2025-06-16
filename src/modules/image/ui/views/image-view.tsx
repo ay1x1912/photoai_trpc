@@ -22,12 +22,15 @@ function ImageView() {
       { refetchInterval: shouldPoll ? 2000 : false }
     )
   );
+  console.log(data);
   useEffect(() => {
-    if (data.images.every((img) => img.outputImage.status===Status.Success)) {
+    if (data.images.every((img) => img.status===Status.Success)) {
       setShouldPoll(false); // stop polling when all URLs are ready
     }
   }, [data]);
-  if (data.images.length == 0) {
+
+
+  if (data.images.length=== 0) {
     return (
       <EmptyState
         image="/empty.svg"
@@ -44,33 +47,6 @@ function ImageView() {
       <DataPagination totalPages={data.totalPages} page={filters.pages} onPageChange={(page)=>setFilters({pages:page})} />
     </div>
   );
-  // return (
-  //   <section className="  border ">
-  //     <div className="mx-auto max-w-5xl px-6">
-  //       <div className="mt-12 ">
-  //         <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-  //           {data.images.map((image, ind) => (
-  //               <AuthorCard
-  //               index={ind}
-  //               status={image.status}
-  //               key={ind}
-  //               backgroundImage={image.imageUrl }
-  //               content={{
-  //                 title: "Image",
-  //                 description: image.prompt,
-  //               }}
-  //             />
-  //           ))}
-  //         </div>
-  //       </div>
-  //     </div>
-  //     <DataPagination
-  //       totalPages={data.totalPages}
-  //       page={filters.pages}
-  //       onPageChange={(page)=>setFilters({pages:page})}
-  //     />
-  //   </section>
-  // );
 }
 
 export default ImageView;

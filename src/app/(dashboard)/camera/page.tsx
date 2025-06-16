@@ -24,6 +24,7 @@ async function CameraPage({ searchParams }: CameraPageProps) {
   }
   const filters = loadSearchParams(params);
   const queryClient = getQueryClient();
+  console.log(params)
   void queryClient.prefetchQuery(trpc.image.getImages.queryOptions({page:filters.pages}));
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

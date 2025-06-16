@@ -23,7 +23,9 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { FaGoogle, FaGithub } from "react-icons/fa";
-import Image from "next/image";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
+import { toast } from "sonner";
 const formSchema = z
   .object({
     name: z.string().min(1, { message: "Name is required" }),
@@ -40,7 +42,17 @@ function SignUpView() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-
+  const queryClient=useQueryClient()
+  const trpc=useTRPC()
+  const insetModel = useMutation(trpc.model.insertModelsOnCreate.mutationOptions({
+    onSuccess: () => {
+      queryClient.invalidateQueries(trpc.model.getModel.queryOptions({}))
+    },
+    onError: (error) => {
+      toast(error.message)
+    }
+  }))
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,7 +77,9 @@ function SignUpView() {
       {
         onSuccess: () => {
           setPending(false);
-          router.push("/");
+          insetModel.mutate()
+          router.push("/model");
+
         },
         onError: ({ error }) => {
           setPending(false);
@@ -80,10 +94,11 @@ function SignUpView() {
     authClient.signIn.social(
       {
         provider: provider,
-        callbackURL: "/",
+        callbackURL: "/model",
       },
       {
         onSuccess: () => {
+          insetModel.mutate();
           setPending(false);
         },
         onError: ({ error }) => {
@@ -236,7 +251,9 @@ function SignUpView() {
             </form>
           </Form>
           <div className="bg-primary relative hidden md:flex flex-col gap-y-4  items-center justify-center">
-            <Image src="/logo.svg" alt="logo" className="h-[92px] w-[92px]" />
+     
+             {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="logo" className="h-[92px] w-[92px]" />
             <p className="text-2xl font-semibold text-white">Photo AI</p>
           </div>
         </CardContent>

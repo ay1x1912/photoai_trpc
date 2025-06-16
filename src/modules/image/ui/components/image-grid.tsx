@@ -34,22 +34,22 @@ export default function ImageGrid({ currentPhotos }: ImageGridProps) {
     <div className="grid gap-6 mb-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {currentPhotos.map((photo) => (
         <Card
-          key={photo.outputImage.id}
+          key={photo.id}
           className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
         >
           <div className="relative">
-            {photo.outputImage.status === Status.Pending ? (
+            {photo.status === Status.Pending ? (
               <Image
                 src={"/loading.svg"}
-                alt={photo.outputImage.prompt.split("prompt:")[1] || "Hello world"}
+                alt={photo.prompt.split("prompt:")[1] || "Hello world"}
                 width={400}
                 height={400}
                 className=" w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
               />
             ) : (
               <Image
-                src={photo.outputImage.imageUrl || "/placeholder.svg"}
-                alt={photo.outputImage.prompt.split("prompt:")[1] || "Hello world"}
+                src={photo.imageUrl || "/placeholder.svg"}
+                alt={photo.prompt.split("prompt:")[1] || "Hello world"}
                 width={400}
                 height={400}
                 className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
@@ -65,7 +65,7 @@ export default function ImageGrid({ currentPhotos }: ImageGridProps) {
                 <DropdownMenuTrigger asChild>
                   <Button
                     disabled={
-                      photo.outputImage.status === (Status.Pending || Status.Failed)
+                      photo.status === (Status.Pending || Status.Failed)
                     }
                     size="sm"
                     variant="secondary"
@@ -77,9 +77,9 @@ export default function ImageGrid({ currentPhotos }: ImageGridProps) {
                 <DropdownMenuContent>
                   <DropdownMenuItem
                     disabled={
-                      photo.outputImage.status === (Status.Pending || Status.Failed)
+                      photo.status === (Status.Pending || Status.Failed)
                     }
-                    onClick={() => downloadImage(photo.outputImage.imageUrl)}
+                    onClick={() => downloadImage(photo.imageUrl)}
                   >
                     <Download className="w-4 h-4 mr-2" />
                     Download
@@ -96,16 +96,16 @@ export default function ImageGrid({ currentPhotos }: ImageGridProps) {
           <CardContent className="p-4 ">
             <div className="space-y-3">
              <div className="flex items-center justify-between mb-2">
-                          <Badge>{photo.model.name}</Badge>
-                          {photo.outputImage.styles && (
-                            <Badge variant="outline">{photo.outputImage.styles!}</Badge>
+                          {/* <Badge>{photo.model.name}</Badge> */}
+                          {photo.styles && (
+                            <Badge variant="outline">{photo.styles!}</Badge>
                           )}
                         </div>
                         <p className="text-sm text-slate-600 line-clamp-2">
-                          {photo.outputImage.prompt.split("prompt:")[1]}
+                          {photo.prompt.split("prompt:")[1]}
                         </p>
                         <p className="text-xs text-slate-500 mt-2">
-                          {new Date(photo.outputImage.createdAt).toDateString()}
+                          {new Date(photo.createdAt).toDateString()}
                         </p>
 
               <div className="flex gap-2 pt-2">
@@ -113,13 +113,13 @@ export default function ImageGrid({ currentPhotos }: ImageGridProps) {
                   <DialogTrigger asChild>
                     <Button
                       disabled={
-                        photo.outputImage.status === (Status.Pending || Status.Failed)
+                        photo.status === (Status.Pending || Status.Failed)
                       }
                       variant="outline"
                       size="sm"
                       className="flex-1"
                     >
-                      {photo.outputImage.status === Status.Pending
+                      {photo.status === Status.Pending
                         ? "Generating"
                         : "View Details"}
                     </Button>
@@ -133,8 +133,8 @@ export default function ImageGrid({ currentPhotos }: ImageGridProps) {
                     </DialogHeader>
                     <div className="space-y-4">
                       <Image
-                        src={photo.outputImage.imageUrl || "/placeholder.svg"}
-                        alt={photo.outputImage.prompt.split("prompt:")[1]}
+                        src={photo.imageUrl || "/placeholder.svg"}
+                        alt={photo.prompt.split("prompt:")[1]}
                         width={600}
                         height={400}
                         className="w-full rounded-lg"
@@ -142,14 +142,14 @@ export default function ImageGrid({ currentPhotos }: ImageGridProps) {
                       <div className="space-y-2">
                         <p>
                           <strong>Prompt:</strong>{" "}
-                          {photo.outputImage.prompt.split("prompt:")[1]}
+                          {photo.prompt.split("prompt:")[1]}
                         </p>
                         {/* <p>
-                          <strong>Style:</strong> {photo.outputImage.style}
+                          <strong>Style:</strong> {photo.style}
                         </p> */}
                         <p>
                           <strong>Created:</strong>{" "}
-                          {new Date(photo.outputImage.createdAt).toLocaleDateString()}
+                          {new Date(photo.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
@@ -157,8 +157,8 @@ export default function ImageGrid({ currentPhotos }: ImageGridProps) {
                 </Dialog>
 
                 <Button
-                  onClick={() => downloadImage(photo.outputImage.imageUrl)}
-                  disabled={photo.outputImage.status === (Status.Pending || Status.Failed)}
+                  onClick={() => downloadImage(photo.imageUrl)}
+                  disabled={photo.status === (Status.Pending || Status.Failed)}
                   size="sm"
                   variant="outline"
                 >

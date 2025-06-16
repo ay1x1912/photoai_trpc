@@ -42,8 +42,10 @@ import Uploader from "@/components/uploader";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+
 import { useZipURL } from "@/store/zipUrl";
+import { useRouter } from "next/navigation";
+
 export default function TrainingForm() {
   const zipUrl = useZipURL((state) => state.zipUrl);
 
@@ -59,10 +61,14 @@ export default function TrainingForm() {
         toast.success("Form summbited");
         setIsTraining(true);
         queryClient.invalidateQueries(trpc.model.getModel.queryOptions({}));
+        queryClient.invalidateQueries(trpc.token.getTokens.queryOptions());
         router.push("/model");
       },
       onError: (error) => {
         toast.error(error.message);
+        if (error.data?.code === "FORBIDDEN") {
+          router.push("/purchase");
+        }
       },
     })
   );

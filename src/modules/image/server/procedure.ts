@@ -1,9 +1,9 @@
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import { createTRPCRouter, paidProcedure, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import { GenerateImageFromPrompt } from "../schema";
 import db from "@/db";
-import { model, outputImage } from "@/db/schema";
-import { and, count, desc, eq } from "drizzle-orm";
+import { model, outputImage, user } from "@/db/schema";
+import { and, count, desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { FalAiModel } from "@/model/falAiModel";
@@ -48,18 +48,12 @@ export const imageRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { page, pageSize } = input;
-      const [modelId] = await db
-        .select({ id: outputImage.modelId })
-        .from(outputImage)
-        .where(
-          and(eq(outputImage.userId, ctx.user.id))
-        );
+   
       const images = await db
         .select()
         .from(outputImage)
         .where(eq(outputImage.userId, ctx.user.id))
         .orderBy(desc(outputImage.createdAt), desc(outputImage.id))
-        .innerJoin(model,eq(model.id,modelId.id))
         .limit(pageSize)
         .offset((page - 1) * pageSize);
 
@@ -74,7 +68,7 @@ export const imageRouter = createTRPCRouter({
         totalPages,
       };
     }),
-  create: protectedProcedure
+  create: paidProcedure("image")
     .input(GenerateImageFromPrompt)
     .mutation(async ({ input, ctx }) => {
       const { modelId, prompt ,styles } = input;
@@ -85,11 +79,15 @@ export const imageRouter = createTRPCRouter({
       if (!selectedModel) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Model not found" });
       }
+     
+      await db.update(user).set({ token: sql`${user.token} -1` }).where(eq(user.id,ctx.user.id))
+
+
       // genreate image call to the ai model
       const falModel = new FalAiModel();
       console.log(prompt, "Prompt");
       console.log(model.tensorPath, "tesnorpath");
-
+     
       const request_id = await falModel.generateImages(prompt,selectedModel.tensorPath!)
       // const request_id = "hello workd";
       if (!request_id) {

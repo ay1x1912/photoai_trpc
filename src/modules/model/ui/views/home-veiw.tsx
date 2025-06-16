@@ -85,8 +85,7 @@ export default function LandingPage() {
               Before & After Showcase
             </h3>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              See how our AI transforms regular photos into stunning cartoon
-              styles.
+              See how our AI reimagines your world, one photo at a time.
             </p>
           </div>
 
@@ -174,10 +173,11 @@ export default function LandingPage() {
                   10 Image Generations
                 </h4>
                 <div className="text-4xl font-bold text-amber-600 mb-2">
-                  $3.00
+                  $5.00
                 </div>
                 <p className="text-slate-600 text-sm">
-                  One-time payment for 10 cartoon image transformations
+                  No subscriptions. Just 10 unique images from your personal AI
+                  model
                 </p>
               </div>
 

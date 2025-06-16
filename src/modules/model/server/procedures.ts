@@ -1,13 +1,39 @@
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import { createTRPCRouter, paidProcedure, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import { trainModelSchema } from "../schema";
 // import { FalAiModel } from "@/model/falAiModel";
 import db from "@/db";
-import { model } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { model, user } from "@/db/schema";
+import { eq, sql } from "drizzle-orm";
 import {z} from "zod"
+import { Ethinicity, EyeColor, Gender } from "../types";
+import { Status } from "@/modules/image/type";
+import { nanoid } from "nanoid";
 
 export const modelRouter = createTRPCRouter({
+  insertModelsOnCreate: protectedProcedure.mutation(async ({ ctx }) => {
+    await db.insert(model).values({
+      id: nanoid(),
+      name: "Ayaan",
+      age: 25,
+      trigerWord: "Ayaan",
+      tensorPath:
+        "https://v3.fal.media/files/elephant/Rytb8czPtEcv4Mn1LwVp0_pytorch_lora_weights.safetensors",
+      falAiRequest_id: "f5507360-232d-4340-93cc-3f050b5ce21c",
+      zipUrl:
+        "https://pub-eb32829f705f4084b8b957e333d06772.r2.dev/model/1746887818746_0.23176822642064332.zip",
+      thumbnailUrl:
+        "https://photoai.10xdev.one/model/1746909873696_0.19457614505421184.jpeg",
+      userId: ctx.user.id, // dynamically passed in
+      gender: Gender.Man,
+      ethinicity: Ethinicity.South_Asian,
+      status: Status.Success,
+      eyeColor: EyeColor.Brown,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    
+  }),
   getModel: protectedProcedure.input(z.object({name:z.string().default("")})).query(async({ ctx }) => {
     const models = await db.select().from(model).where(eq(model.userId, ctx.user.id))
     if (!models) {
@@ -15,10 +41,15 @@ export const modelRouter = createTRPCRouter({
     }
     return models
   }),
-  createModel: protectedProcedure
+  createModel: paidProcedure("model")
     .input(trainModelSchema)
     .mutation(async ({ input, ctx }) => {
-      const {zipUrl ,thumbNailUrl}=input
+      const { zipUrl, thumbNailUrl } = input
+      await db
+        .update(user)
+        .set({ token: sql`${user.token} -4` })
+        .where(eq(user.id, ctx.user.id));
+      
       // call the ai model
       //     const falModel = new FalAiModel();
       //  const request_id = await falModel.trainModel(zipUrl,name);

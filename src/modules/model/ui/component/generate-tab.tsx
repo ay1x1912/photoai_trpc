@@ -34,6 +34,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 const promptSuggestions = [
   "Professional headshot in business attire",
   "Casual portrait in a coffee shop",
@@ -86,30 +88,38 @@ export default function GenerateTab({
   models,
   selectedModel,
   setActiveTab,
-  setGenertateImageId
+  setGenertateImageId,
 }: GenerateTabProps) {
   const [prompt, setPrompt] = useState<string | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-
+  const router = useRouter();
   const generate = useMutation(
     trpc.image.create.mutationOptions({
       onSuccess: (data) => {
         setIsGenerating(true);
         toast("Generating Image");
-        setGenertateImageId(data.id)
+        setGenertateImageId(data.id);
         queryClient.invalidateQueries(trpc.image.getImages.queryOptions({}));
+        queryClient.invalidateQueries(trpc.token.getTokens.queryOptions());
         setActiveTab("gallery");
       },
       onError: (error) => {
         toast.error(error.message);
+        if (error.data?.code === "FORBIDDEN") {
+          router.push("/purchase");
+        }
       },
     })
   );
   const finalPrompt = `stype:${selectedStyle} prompt:${prompt}`;
-  const handleGenerate = (modelId: string, prompt: string ,styles:string| undefined) => {
+  const handleGenerate = (
+    modelId: string,
+    prompt: string,
+    styles: string | undefined
+  ) => {
     if (!modelId) {
       toast("Please select a model");
       return;
@@ -118,7 +128,7 @@ export default function GenerateTab({
       toast("Please enter a prompt");
       return;
     }
-    generate.mutate({ prompt, modelId ,styles });
+    generate.mutate({ prompt, modelId, styles });
   };
   const handleUsePrompt = (text: string) => {
     setPrompt(text);
@@ -182,13 +192,13 @@ export default function GenerateTab({
             <div className="space-y-2">
               <Textarea
                 placeholder="Describe the image you want to generate..."
-                value= {!!prompt ?    prompt : " "}
+                value={!!prompt ? prompt : " "}
                 onChange={(e) => setPrompt(e.target.value)}
                 className="min-h-[100px] resize-none"
               />
               <div className="flex justify-between">
                 <div className="text-xs text-slate-500">
-                  {!!prompt ?    prompt.length : 0} characters
+                  {!!prompt ? prompt.length : 0} characters
                 </div>
               </div>
             </div>
@@ -218,8 +228,10 @@ export default function GenerateTab({
           </CardContent>
           <CardFooter className="p-4 pt-0">
             <Button
-              onClick={() => handleGenerate(selectedModel, finalPrompt ,selectedStyle)}
-                disabled={!prompt || isGenerating}
+              onClick={() =>
+                handleGenerate(selectedModel, finalPrompt, selectedStyle)
+              }
+              disabled={!prompt || isGenerating}
               className="w-full h-12 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
             >
               {isGenerating ? (

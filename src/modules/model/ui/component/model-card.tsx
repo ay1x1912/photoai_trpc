@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Status } from "@/modules/image/type";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {  AlertTriangleIcon, LoaderIcon } from "lucide-react";
+import { AlertTriangleIcon, LoaderIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import React, { useState } from "react";
@@ -23,11 +23,12 @@ export default function ModelCard({
   status,
 }: ModelCardProps) {
   const isLoadingModel = status === Status.Pending;
-  const isFailedModel =(status==Status.Failed)
+  const isFailedModel = status == Status.Failed;
   const [prompt, setPrompt] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const router = useRouter();
   const trpc = useTRPC();
+
   const generateImage = useMutation(
     trpc.image.create.mutationOptions({
       onSuccess: () => {

@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import { Separator } from '@/components/ui/separator'
 import DashboardUserButton from './dashboard-userButton'
+import DashBoardToken from './dasbboard-trial'
 
 const firstSection=[
     {
@@ -39,8 +40,8 @@ const firstSection=[
 const secondSection=[
     {
         icon:StarIcon,
-        label:"Upgrade",
-        href:"/upgrade"
+        label:"Purchase",
+        href:"/purchase"
     }
 ]
 
@@ -117,7 +118,9 @@ function DashBoardSideBar() {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter className="text-white">
+          <DashBoardToken/>
           <DashboardUserButton />
+        
         </SidebarFooter>
       </Sidebar>
     );
