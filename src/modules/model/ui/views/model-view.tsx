@@ -39,7 +39,7 @@ export const ModelsViewLoadingState = () => {
   return (
     <LoadingState
       title="Loading Models"
-      description="Thsi may take a few seconds"
+      description="This may take a few seconds"
     />
   );
 };

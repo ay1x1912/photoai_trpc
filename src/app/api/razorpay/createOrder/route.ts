@@ -31,7 +31,7 @@ export async function POST() {
       return NextResponse.json({ error: "UNATHUORIZED" }, { status: 400 });
     }
     const options = {
-      amount: 500 * 100,
+      amount: 200 * 100,
       currency: "INR",
       receipt: `receipt#${Date.now()}`,
     };
@@ -40,8 +40,8 @@ export async function POST() {
     await db.insert(order).values({
       userId: session.user.id,
       razropayOrderId: orders.id,
-      price: 500 * 100,
-      ammount: 500 * 100,
+      price: 200 * 100,
+      ammount: 200 * 100,
      
     });
     console.log("Order Created Successfully");

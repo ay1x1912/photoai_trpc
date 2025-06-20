@@ -1,7 +1,6 @@
 import db from "@/db";
 import { user } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { polarClient } from "@/lib/polar";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
@@ -37,17 +36,14 @@ export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
 });
 export const paidProcedure = (entity: "image" | "model") =>
   protectedProcedure.use(async ({ ctx, next }) => {
-    const customer = await polarClient.customers.getStateExternal({
-      externalId: ctx.user.id,
-    });
+   
     const [data] = await db.select().from(user).where(eq(user.id, ctx.user.id));
-    const isPaid = customer.activeSubscriptions.length > 0;
-    const isImagePermited = data.token >= 1;
-    const isModelPermited = data.token >= 4;
+    const isImagePermited = data.token >= 3;
+    const isModelPermited = data.token >= 170;
     const shouldThrowImageError =
-      entity === "image" && !isImagePermited && !isPaid;
+      entity === "image" && !isImagePermited
     const shouldThrowModelError =
-      entity === "model" && !isModelPermited && !isPaid;
+      entity === "model" && !isModelPermited 
 
     if (shouldThrowImageError) {
       throw new TRPCError({
@@ -61,5 +57,5 @@ export const paidProcedure = (entity: "image" | "model") =>
         message: "No enough tokens to generate Model",
       });
     }
-     return next({ctx:{...ctx,customer}})
+     return next({ctx:{...ctx}})
   });

@@ -107,6 +107,9 @@ export default function TrainingForm() {
             Provide your details and upload photos to train a personalized AI
             model that can generate photos of you in any style or scenario
           </p>
+          <p className="text-slate-600 max-w-2xl mx-auto">
+            Note: Each model generation uses approximately 170 tokens.
+          </p>
         </div>
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>

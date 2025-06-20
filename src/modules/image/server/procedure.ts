@@ -82,7 +82,7 @@ export const imageRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Model not found" });
       }
      
-      await db.update(user).set({ token: sql`${user.token} -1` }).where(eq(user.id,ctx.user.id))
+      await db.update(user).set({ token: sql`${user.token} -3` }).where(eq(user.id,ctx.user.id))
 
 
       // genreate image call to the ai model

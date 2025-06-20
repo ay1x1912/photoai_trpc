@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "photoai.10xdev.one",
+        hostname: "cms.10xdev.one",
         port: "",
         pathname: "**",
       },

@@ -42,7 +42,7 @@ export default function PurchaseView() {
       const orderId: string = await createOrderId();
       const options = {
         key: "rzp_test_tIbYHWCxA0tVMm",
-        amount: 500 * 100,
+        amount: 200 * 100,
         currency: "INR",
         name: "YOUR_COMPANY_NAME", // Replace with dynamic company name
         description: "Payment for your order", // Replace with dynamic order description
@@ -120,20 +120,21 @@ export default function PurchaseView() {
                     One-time Purchase
                   </Badge>
                   <h4 className="text-2xl font-bold text-slate-900 mb-2">
-                    10 Image Generations
+                    200 Tokens
                   </h4>
                   <div className="text-4xl font-bold text-amber-600 mb-2">
-                    &#8377;500
+                    &#8377;200
                   </div>
                   <p className="text-slate-600 text-sm">
-                    No subscriptions. Just 10 unique images from your personal
+                    No subscriptions. 10 unique images from your personal
                     AI model
                   </p>
                 </div>
 
                 <div className="space-y-3 mb-8">
                   {[
-                    "10 high-quality cartoon transformations",
+                    "Train your Model (170 tokens per model)",
+                    "10 high-quality cartoon transformations (3 tokens per image)",
                     "Download in full resolution",
                   ].map((feature, index) => (
                     <div key={index} className="flex items-center gap-3">
@@ -202,7 +203,7 @@ export default function PurchaseView() {
                 }
                 description={product.description}
                 features={product.benefits.map((benift) => benift.description)}
-                bage={product.metadata.bage as string}
+                badge={product.metadata.badge as string}
               />
             );
           })}

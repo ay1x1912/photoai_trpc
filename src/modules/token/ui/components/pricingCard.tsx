@@ -7,14 +7,14 @@ import React from "react";
 interface PricingCardProps {
   price: number;
   features: string[];
-  bage: string;
+  badge: string;
   title: string;
   description: string | null;
   onClick: () => void;
 }
 export default function PricingCard({
   price,
-  bage,
+  badge,
   features,
   title,
   description,
@@ -25,7 +25,7 @@ export default function PricingCard({
       <CardContent className="p-8">
         <div className="text-center mb-6">
           <Badge className="mb-4 bg-amber-100 text-amber-800 border-amber-200">
-            {bage}
+            {badge}
           </Badge>
           <h4 className="text-2xl font-bold text-slate-900 mb-2">{title}</h4>
           <div className="text-4xl font-bold text-amber-600 mb-2">

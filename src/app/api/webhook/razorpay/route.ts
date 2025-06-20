@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
       await db
         .update(user)
-        .set({ token: sql`${user.token} + 10` })
+        .set({ token: sql`${user.token} + 200` })
         .where(eq(user.id, successOrder.userId));
     }
 

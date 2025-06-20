@@ -41,7 +41,7 @@ export default function ImageGrid({ currentPhotos }: ImageGridProps) {
             {photo.status === Status.Pending ? (
               <Image
                 src={"/loading.svg"}
-                alt={photo.prompt.split("prompt:")[1] || "Hello world"}
+                alt={photo.prompt.split("prompt:")[1] || "loading"}
                 width={400}
                 height={400}
                 className=" w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
@@ -49,7 +49,7 @@ export default function ImageGrid({ currentPhotos }: ImageGridProps) {
             ) : (
               <Image
                 src={photo.imageUrl || "/placeholder.svg"}
-                alt={photo.prompt.split("prompt:")[1] || "Hello world"}
+                alt={photo.prompt.split("prompt:")[1] || "loading"}
                 width={400}
                 height={400}
                 className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"

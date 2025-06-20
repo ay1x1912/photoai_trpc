@@ -26,7 +26,7 @@ export const auth = betterAuth({
               console.log(payload.data);
               await db
                 .update(schema.user)
-                .set({ token: sql`${schema.user.token} + 10` })
+                .set({ token: sql`${schema.user.token} + 200` })
                 .where(eq(schema.user.id, payload.data.customer.externalId as string));
             }
           },

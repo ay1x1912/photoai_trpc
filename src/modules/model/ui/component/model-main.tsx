@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import {  Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ImageIcon, User, Wand2 } from "lucide-react";
+
 import ModelTab from "./model-tab";
 import { ModelGetMany } from "../../model-types";
 import GenerateTab from "./generate-tab";
-import GalleryTab from "./gallery-tab";
+import { User, Wand2 } from "lucide-react";
+
 
 interface ModelMainProps{
     models:ModelGetMany
@@ -24,14 +25,17 @@ export default function ModelMain({ models }: ModelMainProps) {
             Create stunning AI-generated photos using your trained models or
             explore our style presets
           </p>
+          <p className="text-slate-600 max-w-2xl mx-auto">
+            Note: Each image generation uses approximately 3 tokens.
+          </p>
         </div>
         <Tabs
           defaultValue="models"
           value={activeTab}
           onValueChange={setActiveTab}
-          className="w-full"
+          className="w-full  "
         >
-          <TabsList className="grid grid-cols-3 max-w-md mx-auto mb-8">
+          <TabsList className="grid grid-cols-2  max-w-lg mx-auto mb-8">
             <TabsTrigger value="models" className="flex items-center gap-2">
               <User className="w-4 h-4" />
               <span>Models</span>
@@ -39,10 +43,6 @@ export default function ModelMain({ models }: ModelMainProps) {
             <TabsTrigger value="generate" className="flex items-center gap-2">
               <Wand2 className="w-4 h-4" />
               <span>Generate</span>
-            </TabsTrigger>
-            <TabsTrigger value="gallery" className="flex items-center gap-2">
-              <ImageIcon className="w-4 h-4" />
-              <span>Gallery</span>
             </TabsTrigger>
           </TabsList>
           {/* Models Tab */}
@@ -59,11 +59,7 @@ export default function ModelMain({ models }: ModelMainProps) {
               setGenertateImageId={setGenertateImageId}
               selectedModel={selectedModel}
               models={models}
-              setActiveTab={setActiveTab}
             />
-          </TabsContent>
-          <TabsContent   value="gallery" className="space-y-6">
-            <GalleryTab   activeTab={activeTab} setActiveTab={setActiveTab}  genertateImageId={genertateImageId}/>
           </TabsContent>
         </Tabs>
       </div>

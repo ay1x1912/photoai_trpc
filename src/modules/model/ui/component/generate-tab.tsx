@@ -81,13 +81,11 @@ const stylePresets = [
 interface GenerateTabProps {
   models: ModelGetMany;
   selectedModel: string;
-  setActiveTab: Dispatch<SetStateAction<string>>;
   setGenertateImageId: Dispatch<SetStateAction<string>>;
 }
 export default function GenerateTab({
   models,
   selectedModel,
-  setActiveTab,
   setGenertateImageId,
 }: GenerateTabProps) {
   const [prompt, setPrompt] = useState<string | null>(null);
@@ -104,7 +102,7 @@ export default function GenerateTab({
         setGenertateImageId(data.id);
         queryClient.invalidateQueries(trpc.image.getImages.queryOptions({}));
         queryClient.invalidateQueries(trpc.token.getTokens.queryOptions());
-        setActiveTab("gallery");
+        router.push('/camera')
       },
       onError: (error) => {
         toast.error(error.message);

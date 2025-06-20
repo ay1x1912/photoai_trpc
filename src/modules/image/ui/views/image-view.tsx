@@ -42,7 +42,6 @@ function ImageView() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* <ImageSearch /> */}
       <ImageGrid currentPhotos={data.images} />
       <DataPagination totalPages={data.totalPages} page={filters.pages} onPageChange={(page)=>setFilters({pages:page})} />
     </div>
@@ -55,7 +54,7 @@ export const ImagesViewLoadingState = () => {
   return (
     <LoadingState
       title="Loading Images"
-      description="Thsi may take a few seconds"
+      description="This may take a few seconds"
     />
   );
 };
